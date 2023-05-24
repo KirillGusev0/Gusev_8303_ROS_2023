@@ -1,0 +1,8 @@
+prefix=/home/denis/ex_ws/install
+
+Name: my_turtle_follower
+Description: Description of my_turtle_follower
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
