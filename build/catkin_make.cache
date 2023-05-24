@@ -1,0 +1,2 @@
+my_turtle_follower
+-DCATKIN_DEVEL_PREFIX=/home/denis/ex_ws/devel -DCMAKE_INSTALL_PREFIX=/home/denis/ex_ws/install -G Unix Makefiles
