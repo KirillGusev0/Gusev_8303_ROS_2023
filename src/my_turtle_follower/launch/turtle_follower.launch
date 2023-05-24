@@ -1,0 +1,12 @@
+<launch>
+  <!-- Запускаем turtlesim_node -->
+  <node pkg="turtlesim" type="turtlesim_node" name="turtlesim"/>
+  <!-- Запускаем turtle_teleop_key -->
+  <node pkg="turtlesim" type="turtle_teleop_key" name="turtle_teleop_key"/>
+  <!-- Запускаем spawn_turtle_node для создания второй черепашки -->
+  <node pkg="my_turtle_follower" type="spawn_turtle_node.py" name="spawn_turtle_node"/>
+ <node pkg="my_turtle_follower" name="turtle_follower" type="turtle_follower_node.py">
+    <param name="speed" value="2.0"/>
+    <param name="following_turtle_name" value="turtle1"/> <!-- Исправленный параметр -->
+  </node>
+</launch>

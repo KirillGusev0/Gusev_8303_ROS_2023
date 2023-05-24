@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+import rospy
+from turtlesim.msg import Pose
+from geometry_msgs.msg import Twist
+
+class TurtleFollowerNode:
+    def __init__(self):
+        
+        rospy.init_node('turtle_follower_node')
+
+       
+        self.speed = rospy.get_param('~speed', 1.0)
+        self.following_turtle_name = rospy.get_param('~following_turtle_name', 'turtle1')
+
+       
+        self.current_turtle_pose = None
+        self.following_turtle_pose = None
+        rospy.Subscriber('/turtle1/pose', Pose, self.turtle1_pose_callback)
+        rospy.Subscriber('/{}/pose'.format(self.following_turtle_name), Pose, self.following_turtle_pose_callback)
+
+               self.cmd_vel_publisher = rospy.Publisher('/{}/cmd_vel'.format(self.following_turtle_name), Twist, queue_size=10)
+
+    def turtle1_pose_callback(self, pose):
+        # Обновление позиции текущей черепашки
+        self.current_turtle_pose = pose
+
+    def following_turtle_pose_callback(self, pose):
+        # Обновление позиции черепашки-преследователя
+        self.following_turtle_pose = pose
+
+        # Вычисление угла и расстояния между черепашками
+        dx = self.current_turtle_pose.x - self.following_turtle_pose.x
+        dy = self.current_turtle_pose.y - self.following_turtle_pose.y
+        distance = ((dx ** 2) + (dy ** 2)) ** 0.5
+        angle = rospy.atan2(dy, dx)
+
+        # Создание сообщения управления
+        cmd_vel = Twist()
+        cmd_vel.linear.x = distance * self.speed
+        cmd_vel.angular.z = angle
+
+        # Публикация сообщения управления
+        self.cmd_vel_publisher.publish(cmd_vel)
+
+if __name__ == '__main__':
+    try:
+        node = TurtleFollowerNode()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
